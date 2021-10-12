@@ -31,8 +31,8 @@
 
     // Redux can combine reducers without the need to provide a reducer method (as rootReducer was)
     const store = Redux.createStore(Redux.combineReducers({
-       todos,
-       goals
+        todos,
+        goals
     }))
 
     store.subscribe(() => {
@@ -48,11 +48,21 @@
         return Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36);
     }
 
+    function checkAndDispatch(store, action) {
+        if (action.type === ADD_TODO && action.todo.name.toLowerCase().includes('bitcoin')) {
+            return alert('That is a bad idea.')
+        }
+        if (action.type === ADD_GOAL && action.goal.name.toLowerCase().includes('bitcoin')) {
+            return alert('That is a bad idea.')
+        }
+        return store.dispatch(action)
+    }
+
     function addTodo() {
         const input = document.getElementById('todo')
         const name = input.value
         input.value = ''
-        store.dispatch(addTodoAction({
+        checkAndDispatch(store, addTodoAction({
             name,
             complete: false,
             id: generateId()
@@ -63,7 +73,7 @@
         const input = document.getElementById('goal')
         const name = input.value
         input.value = ''
-        store.dispatch(addGoalAction({
+        checkAndDispatch(store, addGoalAction({
             name,
             id: generateId()
         }))
@@ -85,11 +95,11 @@
         const textNode = document.createTextNode(todo.name)
 
         node.appendChild(textNode)
-        const removeBtn = createRemoveButton(() => store.dispatch(removeTodoAction(todo.id)))
+        const removeBtn = createRemoveButton(() => checkAndDispatch(store, removeTodoAction(todo.id)))
         node.appendChild(removeBtn)
 
         node.style.textDecoration = todo.complete ? 'line-through' : 'none'
-        node.addEventListener("click", () => store.dispatch(toggleTodoAction(todo.id)))
+        node.addEventListener("click", () => checkAndDispatch(store, toggleTodoAction(todo.id)))
         document.getElementById('todos').appendChild(node)
     }
 
@@ -97,7 +107,7 @@
         const node = document.createElement('li')
         const textNode = document.createTextNode(goal.name)
         node.appendChild(textNode)
-        const removeBtn = createRemoveButton(() => store.dispatch(removeGoalAction(goal.id)))
+        const removeBtn = createRemoveButton(() => checkAndDispatch(store, removeGoalAction(goal.id)))
         node.appendChild(removeBtn)
 
         document.getElementById('goals').appendChild(node)
