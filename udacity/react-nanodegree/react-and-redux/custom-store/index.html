@@ -40,11 +40,21 @@
         return next(action)
     }
 
+    // Logging middleware
+    const logger = (store) => (next) => (action) => {
+        console.group(action.type)
+        console.log('The action is: ', action)
+        const result = next(action)
+        console.log('The state is: ', store.getState())
+        console.groupEnd()
+        return result
+    }
+
     // Redux can combine reducers without the need to provide a reducer method (as rootReducer was)
     const store = Redux.createStore(Redux.combineReducers({
         todos,
         goals
-    }), Redux.applyMiddleware(checker))
+    }), Redux.applyMiddleware(checker, logger))
 
     store.subscribe(() => {
         const {todos, goals} = store.getState()
