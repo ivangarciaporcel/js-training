@@ -1,4 +1,5 @@
 import {ADD_GOAL, REMOVE_GOAL} from "../actions/goals";
+import {RECEIVE_DATA} from "../actions/share";
 
 /**
  * Custom reducer method for goals
